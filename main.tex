@@ -1,0 +1,43 @@
+
+\documentclass{article}
+
+% Importing document settings from our file "packages.sty"
+\usepackage{packages}
+
+% Beginning of document
+\begin{document}
+
+% Inserting title page
+\import{./}{title}
+
+% Defining front matter settings (Norsk: innstillinger for forord m.m.)
+\frontmatter
+
+% Inserting table of contents
+\tableofcontents
+
+% Inserting list of figures & list of tables
+
+% Defining main matter settings (Norsk: innstillinger for hoveddelen av teksten)
+\mainmatter
+
+
+\import{./Sections/}{1 introduction}
+
+% Example section added from an external tex-file, here located in ./Sections/
+\import{./Sections/}{2 background}
+\import{./Sections/}{3 related work}
+\import{./Sections/}{4 discussion}
+\import{./Sections/}{5 conclusion}
+% Printing bibliography
+\newpage
+\bibliography{references}
+% \printbibliography[heading = bibintoc, title = Bibliography]    % 'bibintoc' inserts our bibliography into the table of contents
+
+% Inserting appendix with separate settings
+% \addappendix
+% \import{./Appendices/}{example_appendix}
+
+% End of document
+
+\end{document}
