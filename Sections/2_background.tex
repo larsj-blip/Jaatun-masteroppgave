@@ -1,0 +1,20 @@
+\section{Background} 
+
+\subsection{Approximate Computing}
+Approximate computing is known under many names including transprecision computing, mixed-precision computing, reduced precision computing, ...
+All these concepts unite under the goal of trying to gain better resource usage or computation speed from reducing the precision of calculations in the program. 
+
+Approximate computing does not require any special tooling to implement. Some tricks, such as memoization(caching results of expensive computations) or loop perforation, or just using types with less bits (float instead of double, i32 instead of i64 etc.) can be performed by the programmer directly in code. Doing all this manually however requires the program composer to instrument the program to verify that the output is within the required bounds of precision, and whether any of the steps taken makes the program behave in an unexpected fashion.
+
+For this reason there have been created several tools aimed at research on the utility of approximate computing. 
+This thesis focuses on mainly two tools: floatsmith and \taffo. In the papers describing them they are capable of reducing the precision of a program written using floating point variables through the usage of c/c++ annotations (that can normally be safely ignored), and propagates changes throughout the program without having to annotate all variables in the program.
+
+These two tools were selected as they were two of the few tools that had source code available on the internet without having to beg the authors in the paper for crumbs. 
+
+\subsubsection{Approximate Computing Approaches}
+
+Both the 
+
+\subsection{Fault Tolerance}
+
+\subsubsection{Fault Tolerance Requirements}

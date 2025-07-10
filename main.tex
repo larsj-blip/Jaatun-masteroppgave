@@ -4,6 +4,9 @@
 % Importing document settings from our file "packages.sty"
 \usepackage{packages}
 
+\newcommand\taffo{{\em Taffo}}
+
+
 % Beginning of document
 \begin{document}
 
@@ -22,13 +25,17 @@
 \mainmatter
 
 
-\import{./Sections/}{1 introduction}
+\import{./Sections/}{1_introduction}
 
 % Example section added from an external tex-file, here located in ./Sections/
-\import{./Sections/}{2 background}
-\import{./Sections/}{3 related work}
-\import{./Sections/}{4 discussion}
-\import{./Sections/}{5 conclusion}
+\import{./Sections/}{2_background}
+\import{./Sections/}{2_method}
+\import{./Sections}{3_results}
+%\import{./Sections/}{3_related work}
+\import{./Sections/}{4_discussion}
+\import{./Sections/}{5_challenges}
+\import{./Sections/}{6_conclusion}
+\import{./Sections/}{7_further_work}
 % Printing bibliography
 \newpage
 \bibliography{references}

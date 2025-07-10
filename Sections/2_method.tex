@@ -1,23 +1,23 @@
 \section{Method}
+Prerequisite to testing the tools is installing the tools. Taffo depends on LLVM 14 or 15 to run, and is at the time of writing not compatible with newer versions of llvm (the most recent version is 20). To install LLVM 15 you can build it from the source code following the instructions found at llvm.org, otherwise you may pull a pre-built binary. To install the pre-built binaries you can use apt, but you may need to add the llvm repository for this to work. 
 
-The thesis was supposed to be based around a quantitative study of fault tolerance in programs that apply approximate computing techiques for either performance gains, energy savings, or both.
+Building Taffo was only successful when using pre-built binaries. 
+The other tool that was used was floatsmith. This can be installed the easiest using their provided docker image, and mounting the project you want to perform experiments on.
 
-Fault tolerance would be measured through fault injection campaigns.
-The first fault injection campaign consisted of single bit fault injections. This consisted of taking a sample benchmark from the taffo repository, compiling it to an intermediate format such as the LLVM IR, then flipping single bits one by one and noting the effect that it has on the end result of the benchmark compared to the unmodified version of the benchmark.
+\subsection{bitwise fault injection}
+Bitwise fault injection was done thorugh manually performing an xor operation in llvm IR on the values to be subjected to faults.
 
-The next campaign would be performed on non-benchmark code. The chosen library was OpenCV which is used for computer vision applications in python and c++, more specifically a facial recognition example written using the OpenCV library. The fault injection planned here would also be single bit fault injections in variables, however as the output from these functions are not numbers but a graphical representation of where a face in an image is, the error would be measured in how many frames, if at all, a face is detected in a standard video representation.
+%example of xor operation?
 
-To collect data on developmental faults, i.e. faults that do not occur when the code is running but occur during the development of the code, another campaign was planned. This fault injection campaign was inspired by the technique and paper on G-SWFIT.
+The first fault injection campaign consisted of single bit fault injections. This consisted of taking a sample benchmark from the taffo repository, compiling it to an intermediate format, in this case the LLVM IR, then flipping single bits one location at a time, and building it to a fault injected executable. For taffo, which converts floating point values to lower precision fixed point values, this requires creating a fault injected version for both the fixed and floating point intermediate format.
 
-The tools that were selected for evaluation was floatsmith and taffo. Flexfloat allows for substituting floating point variables with smaller floating point numbers, and allows users to edit both mantissa and exponent width in the floating point variables for custom floating point number representations. Aditionally, flexfloat emulates the floating point operations, so you do not need specialized hardware to run programs using these custom number representations.
-floatsmith is a tool made to perform mixed precision
+For each pair of fault injected executables, the outputs are compared between each other and the original floating point implementation.
 
-Taffo is a tool that is made to investigate the effect of substituting floating point variables with fixed point variables, both with respect to total numerical difference in calculations, and differences in execution speed. It is built as a collection of passes that convert code that has been annotated with the range of values that a variable can have. It proceeds to convert that variable to a fixed point type, converting operations done on that variable to fixed point cpu instructions, and propagating the change in types throughout the program.
+To streamline injections, a helper script was created based on the existing scripts in the TAFFO repository. This allows a user to compile the selected benchmark from a list of benchmarks to llvm IR, inject faults in a user-selected location in the code, then change the bit location of this fault, and compile many different versions of the same benchmark with different faults injected in the same location. The script then runs all the benchmarks and collects output. Finally a python script that reads these outputs collects and compares them in a human readable format.
 
-The first part of this project was dedicated to getting the programs to run on various machines.
+The scripts are rather ad-hoc and requires some editing of code depending on the amount of bits that the user of the scripts wants to flip for one location.
 
-Floatsmith was written for ubuntu 18.04, which is no longer supported. This makes building from source difficult, however they supply a prebuilt docker image that is still available at the time of writing.
-After downloading floatsmith, it is relatively straightforward to mount your local folder containing the code you want to optimize.
+The comparison script written in python was written in a separate repository with tests, and simply copied over. This process would have benefitted from some kind of streamlining as well. 
 
-floatsmith requires users to
-
+\section{AI use}
+AI was for the most part not used in neither the report nor the project part of the thesis, save for one instance. During a period of very slow progression, there was an attempt to coerce chatGPT to make sense of the build errors given by taffo when trying to build it using clang15 built from source in debug mode. This led to many answers, though unfortunately no good ones. This only served to reinforce my opinion that relying on large language models for anything is a net waste of time. 

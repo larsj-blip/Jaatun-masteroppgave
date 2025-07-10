@@ -1,0 +1,21 @@
+\section{Introduction}
+
+
+%Approximate computing is a computing paradigm that is gaining traction in both hardware and software applications, due to potential performance gains combined with potential lower power consumption. This is further incentivized by the end of Dennard scaling; in the 1970's Dennard  theorized that together with increasingly smaller transistors, other aspects of processors would scale with it, such as power consumption through a lower required supply voltage~\citep{bohr200730}. This is currently falling apart~\citep{esmaeilzadeh2011dark}, and so researchers, hardware designers and programmers are starting to look elsewhere for performance and efficiency gains.
+
+Reducing the power requirements while also increasing processing power is a never-ending mission. For many years, decreasing transistor size while increasing the amount of transistors was the easiest bet, and this evolved into multi-core processing that we have today. While the largest leaps have been made on the hardware side, there are also efforts to improve resource usage through software. One such effort is approximate computing. 
+
+Approximate computing, at its core, aims to gain either reduced power consumption, higher processing speeds, or both at the same time, at the cost of the precision of the results. This reduction in precision is implemented either as less accurate algorithms that are less resource intensive but not guaranteed to get an accurate result(for instance a greedy graph traversal algorithm that finds a path between two specified nodes quickly but is not guaranteed to find the best route (dijkstras vs a*?) ), or simply reducing the bit width of the variables used in a program.
+
+Critical infrastructure and other critical fields can benefit from approximate computing. In simulation and high precision data processing, approximate computing may reduce both time spent on calculations and power consumed at the cost of precision. Image processing and recognition done in modern cars for obstacle detection and avoidance may also benefit from lower power draw from computers as well as increased processing speed.
+
+To augment applications that require correct service, a more thorough analysis of how approximate computing techniques affect the dependability of an application is required.
+
+Fault tolerance is vital for applications in critical infrastructure and real time systems with strict operating requirements, such as self driving cars. In the worst case, a fault that becomes an error may result in the loss of life. 
+
+Code quality must figure in fault tolerant code, and should be accounted for when it comes to evaluating the fault tolerance of a tool. While the operational aspect is certainly important, i.e. how the code responds to faults that occur during operation, a projects code quality will affect the amount of faults that are created during the developmental phase. How resistant the codebase is to developmental faults is important to evaluate when evaluating the fault tolerance of a code project.
+
+There are multiple papers on the investigation of fault tolerance through hardware fault injection. Hardware fault injection can be performed through ionizing radiation, heat or applying local voltages to the hardware. Fault tolerance experiments such as these are performed mostly to evaluate hardware that will be subjected to harsh conditions. 
+Fault injection in software is also done. For instance, (PAPER ON GEM-V FAULT INJECTION HERE) flips individual bits in the program, and simulates the running of these programs to find all bits in a program that are conducive to silent data corruptions.  G-SWFIT is a methodology of injecting software faults that would otherwise fall outside of what a programmer could catch during testing. 
+
+These strategies have not been applied to approximate computing as a whole, so as to enable discussions of fault tolerance in approximate computing.
