@@ -8,6 +8,12 @@ The other tool that was used was floatsmith. This can be installed the easiest u
 Bitwise fault injection was done thorugh manually performing an xor operation in llvm IR on the values to be subjected to faults.
 
 %example of xor operation?
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Images/xor_operation.png}
+    \caption{An example xor operation between two numbers. The xor operation ensures that only the operation }
+    \label{fig:xor_operation}
+\end{figure}
 
 The first fault injection campaign consisted of single bit fault injections. This consisted of taking a sample benchmark from the taffo repository, compiling it to an intermediate format, in this case the LLVM IR, then flipping single bits one location at a time, and building it to a fault injected executable. For taffo, which converts floating point values to lower precision fixed point values, this requires creating a fault injected version for both the fixed and floating point intermediate format.
 

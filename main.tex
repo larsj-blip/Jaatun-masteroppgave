@@ -3,7 +3,15 @@
 
 % Importing document settings from our file "packages.sty"
 \usepackage{packages}
-
+\usepackage{longtable}
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily,
+  columns=fullflexible,
+  frame=single,
+  breaklines=true,
+  postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+}
 \newcommand\taffo{{\em Taffo}}
 
 
@@ -26,8 +34,6 @@
 
 
 \import{./Sections/}{1_introduction}
-
-% Example section added from an external tex-file, here located in ./Sections/
 \import{./Sections/}{2_background}
 \import{./Sections/}{2_method}
 \import{./Sections}{3_results}
@@ -36,6 +42,7 @@
 \import{./Sections/}{5_challenges}
 \import{./Sections/}{6_conclusion}
 \import{./Sections/}{7_further_work}
+\import{./Sections}{8_appendix.tex}
 % Printing bibliography
 \newpage
 \bibliography{references}
