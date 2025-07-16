@@ -127,4 +127,13 @@ The comparison script written for the fault injection part was written in a sepa
 The new compilation and run shell scripts were heavily influenced by the existing compile.sh and run.sh scripts, but edited for the purposes of this project. The new run script provided functionality to run multiple files of the same benchmark with bitwise faults injected at different locations, and the new compile script likewise allows the user to easily compile multiple versions of the same script with bitwise faults at different locations.
 
 
-The knowledge gained throughout the project was documented in the official \taffo{} repository to avoid future time wasting because of misunderstandings. 
+\subsection{documenting deviations}
+
+There have been some omissions and deviations which are not documented in neither the code repository nor the papers which can be submitted as a pull request to the \taffo project. 
+This includes facts such as the error propagator not actually doing anything, and the installation instructions of \taffo not being foolproof (though the bigger the fool, the more difficult to proof).
+
+Though there is both a test and a test-lit folder in the taffo project, neither is documented in the readme or elsewhere, and the tests themselves are cryptic at best. While one would have to assume some knowledge of a testing framework, the tests do not declare what they test. This holds for both test folders. 
+
+In addition to not being very declarative in the test descriptions, the tests folder contains a lot of benchmarks. These are not tests in that they do not assert some kind of functionality that can be verified, only whether the code produces \*some\* output. Therefore it should not reside in the tests folder, but perhaps a folder named benchmarks.
+
+

@@ -1,25 +1,26 @@
 \section{Background} 
 
 \subsection{Approximate Computing}
-Approximate computing is known under many names including transprecision computing, mixed-precision computing, reduced precision computing, ...
+Approximate computing is known under many names including transprecision computing, mixed-precision computing and reduced precision computing.
 All these concepts unite under the goal of trying to gain better resource usage or computation speed from reducing the precision of calculations in the program. 
 
 Approximate computing does not require any special tooling to implement. Some tricks, such as memoization (caching results of expensive computations) or loop perforation, or just using types with less bits (float instead of double, i32 instead of i64 etc.) can be performed by the programmer directly in code. Doing all this manually however requires the program composer to instrument the program to verify that the output is within the required bounds of precision, and whether any of the steps taken makes the program behave in an unexpected fashion. For this reason there have been created several tools aimed at research on the utility of approximate computing that encompasses both the execution of the code and verification of the results. 
 
 %figures of approximate computing techniques?
 \subsubsection{Approximate computing through reducing amount of bits}
+\label{section:approximate_computing_through_reducing_bits}
 
-This thesis focuses on mainly two tools: floatsmith and \taffo. In the papers describing them they are capable of reducing the precision of a program written using floating point variables through the usage of c/c++ annotations (that can normally be safely ignored), and propagates changes throughout the program without having to annotate all variables in the program.
+This thesis focuses on mainly two tools: floatsmith~\citep{floatsmith_paper} and \taffo{}~\citep{cherubin2019taffo}. In the papers describing them they are capable of reducing the precision of a program written using floating point variables through the usage of C/C++ annotations (that can normally be safely ignored by a compiler), and propagates changes throughout the program without having to annotate all variables in the program.
 
-Floatsmith aims to achieve mixed precision programs that vary the size of the floating point numbers used throughout, selecting from the IEEE 754-2008 Standard for Floating-Point Arithmetic for single- (32 bit), double- (64 bit), quad- (128 bit) and half-precision (16-bit) floating point numbers. Figure~\ref{fig:float_bit_representation} shows a bit representation of a number using the same principles as the IEEE standard, but with arbitrarily selected sizes of the different sections of the bits.
-\begin{figure}
+Floatsmith aims to achieve mixed precision programs that vary the size of the floating point numbers used throughout, selecting from the IEEE 754-2008 Standard for Floating-Point Arithmetic~\citep{ieee754} for single- (32 bit), double- (64 bit), quad- (128 bit) and half-precision (16-bit) floating point numbers. Figure~\ref{fig:float_bit_representation} shows a 8-bit representation of a floating point number using the same principles as the IEEE standard, but with arbitrarily selected sizes of the different sections of the bits. 
+\begin{figure}[h]
     \centering
     \includegraphics[width=0.5\linewidth]{Images/float_bit_representation.png}
     \caption{simplified floating point representation of a number, in this case the number 0.078125}
     \label{fig:float_bit_representation}
 \end{figure}
 
-Equation~\ref{eq:float} shows the equation that corresponds to the real value of a floating point number stored in this format.
+Equation~\ref{eq:float} shows the equation that corresponds to the decimal value of a floating point number stored in this format. The IEEE 754-2008 Standard has predefined bit widths for the exponent and mantissa sections, this example disregards these sizes and operates with the sizes in figure~\ref{fig:float_bit_representation}
 
 \begin{equation}\label{eq:float}
     (-1)^{bit_7} * 2^{(exponent) - 7} * mantissa \, value
@@ -31,13 +32,13 @@ The sign bit decides whether the number is positive or not. The function of the 
     (-1)^{1} = -1
 \end{equation}
 
-The exponent part of the floating point number decides the exponent part of the equation. The IEEE standard defines the exponent part of the number using an implicit negative offset, such that if all bits except the leftmost bit (bit number 6 in figure~\ref{fig:float_bit_representation}) are set to 1, the exponent is 0. For the arbitrary floating point format shown in figure~\ref{fig:float_bit_representation}, the offset becomes $2^4 - 1$, which is 7. This makes the exponent part of our arbitrary floating point number as shown in~\ref{eq:float2}.
+The exponent part of the floating point number decides the exponent part of the equation. The IEEE standard defines the exponent part of the number using an implicit negative offset, such that if all exponent bits except the most significant bit (bit at index 6) in figure~\ref{fig:float_bit_representation}) are set to 1, the exponent is 0. For the arbitrary floating point format shown in figure~\ref{fig:float_bit_representation}, the offset becomes $2^4 - 1$, which is 7. This makes the exponent part of our arbitrary floating point number as shown in equation ~\ref{eq:float2}.
 \begin{equation} \label{eq:float2}
     2^{4-7} = 2^{-3}
 \end{equation}
 
-The final part of the floating point number, the mantissa, also known as the fraction or the significand, is usually the largest part (with respect to the amount of bits in a bitwise representation it takes up) of a floating point number, but seeing as the floating point representation in figure~\ref{fig:float_bit_representation} is entirely of my invention I don't have to conform to those norms, though I will follow the same rules for calculating the value.
-The value of the number is calculated as with a bitwise represented integer, only starting at bit index 2 the bit value is $bit\,value*2^-1$, the value at bit index 1 is $bit\,value*2^-2$, and so on so forth. Additionally, an implicit value of 1 is added to the value. This makes the value represented in figure~\ref{fig:float_bit_representation} shown in~\ref{eq:float3}:
+The final part of the floating point number, the mantissa, also known as the fraction or the significand, is usually the largest part (with respect to the amount of bits in a binary representation it takes up) of a floating point number, but seeing as the floating point representation in figure~\ref{fig:float_bit_representation} is entirely of my invention I don't have to conform to those norms, though I will follow the same rules for calculating the value.
+The value of the number is calculated as with an integer represented in binary, only starting at bit index 2 the bit value is $bit\,value*2^{-1}$, the value at bit index 1 is $bit\,value*2^{-2}$, and so on. Additionally, an implicit value of the integer 1 is added to the mantissa. This makes the value represented in figure~\ref{fig:float_bit_representation} shown in equation~\ref{eq:float3}:
 
 \begin{equation}\label{eq:float3}
    1 + 0*2^{-1} + 1*2^{-2} + 0*2^{-3} = 1.25
@@ -46,9 +47,9 @@ The value of the number is calculated as with a bitwise represented integer, onl
 Plugging in the values found above into equation~\ref{eq:float} gives us $-1 * 2^{-3} * 1.25 = 0.078125$
 The IEEE definitions have additional special cases for when all bits in the exponent are either 1 or 0 to deal with special situations, but this is not important for a basic understanding of how the bit representation works.
 
-When reducing the size of the data you are operating on, for example replacing some of the double precision floating point values to single precision floating point values, the most significant change is that you are required to fetch and store less bits from memory, alleviating the storage bottle neck in processing~\cite{floatsmith_paper}.
+When reducing the size of the data you are operating on, for example replacing some of the double precision floating point values to single precision floating point values, the most significant change is that you are required to fetch and store less bits from memory, alleviating the storage bottle neck in processing~\citep{floatsmith_paper}.
 
-\taffo also performs conversions from floating point number representations, but instead of switching between different bit widths of floating point numbers, \taffo transforms numbers to fixed point representation. Figure~\ref{fig:fixed_point_representation} shows an arbitrary number, and its complement (the same number multiplied by -1) in binary.
+\taffo{} also performs conversions from floating point number representations, but instead of switching between different bit widths of floating point numbers, \taffo{} transforms numbers to fixed point representation. Figure~\ref{fig:fixed_point_representation} shows an arbitrary number, and its complement (the same number multiplied by -1) in binary.
 
 \begin{figure}
     \centering
@@ -63,7 +64,7 @@ Therefore, depending on the program, the numerical values for the bit representa
 
 Fixed point numbers can represent a smaller range of numbers with the same amount of bits as a floating point representation, and with lower precision. The flip side is that they are in general easier to perform computations on. 
 
-\taffo therefore depends on users of the program to annotate a variable that is to be converted to a fixed point type with the range of values it can have, which is used to decide how many bits is required to represent the number accurately enough as a fixed point number. 
+\taffo{} therefore depends on users of the program to annotate a variable that is to be converted to a fixed point type with the range of values it can have, which is used to decide how many bits is required to represent the number accurately enough as a fixed point number. 
 
 These two tools were selected as they were two of the few tools that had source code available on the internet without having to beg the authors in the paper for crumbs. 
 
@@ -75,8 +76,28 @@ Loop perforation, described in~\citet{li2018sculptor}, works by skipping iterati
 
 \subsubsection{Approximate Computing through Memoization}
 
-Memoization consists of mapping the inputs of expensive functions to their outputs, and avoiding to re-run the function for the same input, thereby saving energy. This is described more in depth in~\citep{mittal2016survey}.
+Memoization consists of mapping the inputs of expensive functions to their outputs, and avoiding to re-run the function for the same input, thereby saving energy. This is described more in depth by~\citet{mittal2016survey}.
 
-\subsection{Fault Tolerance}
+\subsection{LLVM-IR}
+LLVM-IR (LLVM Internal Representation) is an assembly-like programming language used as an intermediate representation within the LLVM suite of tools. LLVM is not an acronym, though in the early stages of the project it used to stand for Low Level Virtual Machine. These tools are mostly made for performing code transformations, and these transformations are made on LLVM-IR. The LLVM tools relevant to this thesis is the core optimizer for optimizing code, and clang for compiling C/C++~\citep{LLVM_homepage}.  %explain llvm 
 
-\subsubsection{Fault Tolerance Requirements}
+\taffo{} is comprised of LLVM optimization passes. These optimization passes are performed on LLVM-IR, and clang is used to compile source code (with custom made annotations denoting the range of the variables) to LLVM-IR. %how taffo figures in this
+
+
+
+\subsection{Reliability through Fault Tolerance}
+Reliability is a concept that concerns itself with whether a system provides correct service or not. A system in this context could be a software component such as a software library, or an entire computer system together with software such as an ATM machine. Correct and incorrect service is not necessarily a rigid concept for all types of systems. In the case of an ATM machine, correct service requires cash withdrawals to match the amount withdrawn from an account exactly for the service to be defined as correct, while a computer vision face detection library that detects a face in 90 out of 100 images may still be considered to provide correct service.
+
+\citet{avizienis2004basic} provides this definition of reliability, as well as dividing reliability into multiple related concepts. Of these, the most relevant to this thesis is the definitions of fault tolerance, service failure, errors, and faults.  
+
+Fault tolerance is a prerequisite to reliability. Fault tolerance is defined as the continued delivery of correct service in spite of faults present in the system. A fault is an artifact that may result in an error, and an error is an internal state of the system, or a part of the system, that deviates from correct service. An error does not necessarily end up affecting the external state (the output of the system, or system delivery), but the moment that an error does affect the external state to an incorrect state, this constitutes a service failure.
+
+\citet{avizienis2004basic} divides faults into two categories: developmental faults, or operational faults. Faults are divided into one of the two depending on when they occur: developmental faults occur during the development of the system, and operational faults occur when the system is providing service. A software bug would be a developmental fault, and a bit flip caused by ionizing radiation would constitute an operational fault.
+
+\subsubsection{Verifying Fault Tolerance}
+
+Different applications have different fault tolerance requirements; a satellite in orbit of the earth would necessarily have much higher requirements with respect to operational fault tolerance than a run-of-the-mill home computer. Developmental fault tolerance in software governing an industrial complex will also be stricter than the software governing a smart home system. 
+
+Given these requirements, one way of verifying or quantifying the fault tolerance of a system is through fault injection. There are frameworks for injecting both operational and developmental faults allowing users to gauge fault tolerance in a way that would be difficult without: Given a lack of the resources required to perform hardware fault injection as~\citet{arlat1993fault} describe, software alternatives like Xception~\citep{carreira1998xception} that allows the user to emulate hardware bit flips in a program, or the Gem5-approxilyzer described in~\citet{venkatagiri2019gem5} that allows users to simulate how single bit flips propagate instruction by instruction through a processor can provide accurate alternatives.
+
+Developmental fault injection can also be performed, with~\citet{natella2012fault} describing an approach using available statistics for a category of software to infer potential fault locations that statistically would not be caught in testing. Injecting faults that are caught by tests to evaluate tests is a strategy commonly known as mutation testing, the goal of which is to create code "mutants" (versions of your code that contain an injected error), and then "killing" the mutants with the test suite, i.e.,  the test suite catches unexpected behavior through tests failing.
