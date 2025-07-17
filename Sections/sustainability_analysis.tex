@@ -12,8 +12,20 @@ The following analysis has been created using a lightweight version of SusAF (Su
 The artifact under review for this thesis is an analysis of reliability in approximate computing tools. The intended audience consists of approximate computing system developers and system architects looking to improve efficiency of their solution, and the analysis will be performed from their point of view. 
 
 \subsection{Individual Impacts}
-Individual impacts of the analysis con
+The biggest contribution on the individual plane is that the analysis may change a users perception of the reliability of approximate computing, and this could lead to implementing approximate computing in a hitherto untested area. 
+
+
 \subsection{Social Impacts}
+The same as for Individual Impacts...
+\subsection{Environmental Impacts}
+An analysis may facilitate the implementation of approximate computing in fields that can benefit from it. This results in lower resource usage if the output is not increased (e.g. performing larger simulations due to simulations being cheaper, thereby negating the positive effect of the system.
 
+\subsection{Economic Impacts}
+For product owners, approximate computing implementation may decrease costs of operation to produce an equivalent result. This in turn may trickle down to users of said program if price decreases due to the decrease in operation costs. 
+Equally likely, the temptation of saving money may encourage service providers to accept risks now that they are more concrete in order to increase the cash flow.
 \subsection{Technical Impacts}
+Depending on what solution is implemented, the degree of maintainability of the program may decrease. This is due to having to understand the preexisting codebase, as well as understanding the transformations performed by the approximate computing program. 
 
+If the approximate computing system is a drop-in tool, such as a compiler optimisation pass, in case of errors with the approximate computing tool it should be trivial to simply remove the optimisation pass, and the code should compile as usual.
+
+This analysis does not delve into the scalability of approximate computing. This is further work.
