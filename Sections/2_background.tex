@@ -85,7 +85,7 @@ LLVM-IR (LLVM Internal Representation) is an assembly-like programming language 
 
 
 
-\subsection{Reliability through Fault Tolerance}
+\subsection{Reliability through Fault Tolerance}\label{section:Reliability_thorugh_fault_tolerance}
 Reliability is a concept that concerns itself with whether a system provides correct service or not. A system in this context could be a software component such as a software library, or an entire computer system together with software such as an ATM machine. Correct and incorrect service is not necessarily a rigid concept for all types of systems. In the case of an ATM machine, correct service requires cash withdrawals to match the amount withdrawn from an account exactly for the service to be defined as correct, while a computer vision face detection library that detects a face in 90 out of 100 images may still be considered to provide correct service.
 
 \citet{avizienis2004basic} provides this definition of reliability, as well as dividing reliability into multiple related concepts. Of these, the most relevant to this thesis is the definitions of fault tolerance, service failure, errors, and faults.  
@@ -94,7 +94,7 @@ Fault tolerance is a prerequisite to reliability. Fault tolerance is defined as 
 
 \citet{avizienis2004basic} divides faults into two categories: developmental faults, or operational faults. Faults are divided into one of the two depending on when they occur: developmental faults occur during the development of the system, and operational faults occur when the system is providing service. A software bug would be a developmental fault, and a bit flip caused by ionizing radiation would constitute an operational fault.
 
-\subsubsection{Verifying Fault Tolerance}
+\subsubsection{Verifying Fault Tolerance}\label{section:Verifying_fault_tolerance}
 
 Different applications have different fault tolerance requirements; a satellite in orbit of the earth would necessarily have much higher requirements with respect to operational fault tolerance than a run-of-the-mill home computer. Developmental fault tolerance in software governing an industrial complex will also be stricter than the software governing a smart home system. 
 
