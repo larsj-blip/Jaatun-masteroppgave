@@ -2,9 +2,9 @@
 
 \subsection{Approximate Computing}
 Approximate computing is known under many names including transprecision computing, mixed-precision computing and reduced precision computing.
-All these concepts unite under the goal of trying to gain better resource usage or computation speed from reducing the precision of calculations in the program. 
+All these concepts unite under the goal of trying to improve computer resource usage or computation speed through reducing the precision of calculations in the program. 
 
-Approximate computing does not require any special tooling to implement. Some tricks, such as memoization (caching results of expensive computations) or loop perforation, or just using types with less bits (float instead of double, i32 instead of i64 etc.) can be performed by the programmer directly in code. Doing all this manually however requires the program composer to instrument the program to verify that the output is within the required bounds of precision, and whether any of the steps taken makes the program behave in an unexpected fashion. For this reason there have been created several tools aimed at research on the utility of approximate computing that encompasses both the execution of the code and verification of the results. 
+Approximate computing does not require any special tooling to implement. Some tricks, such as memoization~\citep{} (caching results of expensive computations) or loop perforation\citep{li2018sculptor}, or just using types with less bits (float instead of double, i32 instead of i64 etc)\citep{} can be performed by the programmer directly in code. Doing all this manually however requires the program composer to instrument the program to verify that the output is within the required bounds of precision, and whether any of the steps taken makes the program behave in an unexpected fashion. For this reason there have been created several tools aimed at research on the utility of approximate computing that encompasses both the execution of the code and verification of the results. 
 
 %figures of approximate computing techniques?
 \subsubsection{Approximate computing through reducing amount of bits}
