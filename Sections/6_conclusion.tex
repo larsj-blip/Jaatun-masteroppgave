@@ -1,1 +1,8 @@
-More work needed lol?
+\section{Conclusion}
+
+There are tools that can produce program code with reduced precision that at first glance can boast similar levels of reliability as "vanilla" programs, programs that are produced/compiled using only generally available compilers such as Clang or GCC (for C programs at least). 
+The code quality of existing tools make concluding for or against existing approximate computing tools difficult. 
+
+Of the tools that are described in literature, only floatsmith and \taffo{} aim to improve processing speeds independent of hardware and have source code readily available. Floatsmith is not sufficiently tested with larger code repositories and would not work with the selected benchmark.\taffo{} behavior is not sufficiently documented in the code through tests and internal documentation, and there are no passing builds in the CI-setup on github at the time of writing, complicating the assessment of the tool.
+
+The goal of the thesis was to develop knowledge of inherent reliability properties (or the lack thereof) within approximate computing. Approximate computing is a broad category that consists of many different strategies which often do not overlap. The category that was investigated in this thesis was approximate computing by reducing the precision of the intermediate calculations. Through a one bit-flip at a time fault injection campaign on an established CPU benchmark augmented to function with \taffo{}, the program behaves in a predictable manner conducive to reliability. This cannot be used to infer reliability properties of other approximate computing techniques because of how the approaches differ, and the lack of available source code for  tools that are proven to improve efficiency and/or speed of computer programs. 
