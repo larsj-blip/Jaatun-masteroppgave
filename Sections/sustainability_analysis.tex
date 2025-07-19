@@ -7,16 +7,14 @@ Just like approximate computing is a tradeoff between precision and processing s
 
 All the categories represent unquestionable quality of life improvements for all humans, though enacting them may result in contraticting results. For instance, goal 1 is to end poverty in all its forms everywhere. So a factory gets established, which creates several jobs for the empoverished residents at this location. However, the factory produces runoff that contaminates a nearby water source, going against goal number 6 of ensuring availability and sustainability of water and sanitation for all. 
 
-The following analysis has been created using a lightweight version of SusAF (Sustainability Assessment Framework)~\cite{SusAF_website}. SusAF divides sustainability effects into 5 categories: Social, individual, technical, economic and environmental. The social aspect describes how the artifact under review affects interpersonal relationships, and the individual aspect describe changes in personal health and quality of life. The technical aspect concerns itself with the lifecycle of a product or service, and how the service can be adapted to changing needs or technical demands. The economic aspect describes how the artifact under review changes the business side of things, whether performing research or creating monetary value becomes easier or harder. Finally, the Environmental aspect describe how the artifact under review may affect nature, through increasing or decreasing the load on nature through human presence.
+The following analysis has been created using a lightweight version of SusAF (Sustainability Assessment Framework)~\cite{SusAF_website}. SusAF divides sustainability effects into 5 categories: Social, individual, technical, economic and environmental. The social aspect describes how the artifact under review affects interpersonal relationships, and the individual aspect describe changes in personal health and quality of life. The technical aspect concerns itself with the lifecycle of a product or service, and how the service can be adapted to changing needs or technical demands. The economic aspect describes how the artifact under review changes the business side of things, whether performing research or creating monetary value becomes easier or harder. Finally, the environmental aspect describe how the artifact under review may affect nature, through increasing or decreasing the load on nature through human presence.
 
 The artifact under review for this thesis is an analysis of reliability in approximate computing tools. The intended audience consists of approximate computing system developers and system architects looking to improve efficiency of their solution, and the analysis will be performed from their point of view. 
 
-\subsection{Individual Impacts}
-The biggest contribution on the individual plane is that the analysis may change a users perception of the reliability of approximate computing, and this could lead to implementing approximate computing in a hitherto untested area. 
+\subsection{Individual social impacts}
+The biggest contribution on the individual plane is that the analysis may change a users perception of the reliability of approximate computing, and this could lead to implementing approximate computing in a hitherto untested areas. 
 
 
-\subsection{Social Impacts}
-The same as for Individual Impacts...
 \subsection{Environmental Impacts}
 An analysis may facilitate the implementation of approximate computing in fields that can benefit from it. This results in lower resource usage if the output is not increased (e.g. performing larger simulations due to simulations being cheaper, thereby negating the positive effect of the system.
 
@@ -31,10 +29,25 @@ If the approximate computing system is a drop-in tool, such as a compiler optimi
 This analysis does not delve into the scalability of approximate computing. This is further work.
 
 
+Figure~\ref{fig:SusAF_diagram} shows how the different aspects of sustainability relate to each other. The numbers correspond to the entries in table~\ref{table:SusAF_table}. The arrows show in what direction the different sustainability impacts may affect the other impacts, this is also represented in the table.
+There are 3 different colors in figure~\ref{fig:SusAF_diagram} that represent different types of impacts: Immediate impacts, which are direct effects of the production/use of the service, enabling impacts, which are effects that come as a result of the Immediate impacts, and lastly Structural, which represent broad impacts on a societal scale.
+\begin{table}[]
+    \centering
+    \begin{tabular}{p{0.1\linewidth}|p{0.25\linewidth}|p{0.25\linewidth}|p{0.2\linewidth}} 
+        Number & Description & category & Relates to: \\
+        \hline
+         1 & Individual confidence in the usage of approximate computing tools is reduced & Individual & 2 \\
+         2 & The development of new approximate computing tools is discouraged & Technical & 3\\
+         3 & Not using available techniques that reduce the power requirements of a system is tantamount to increasing power draw & Environment && \\
+         4 & Trust in approximate computing concepts increases & Social &  5 \\
+         5 & Increased adoption of approximate computing leads to lower power consumption & Economic &6 \\    
+         6 & Can do more with existing resources & Environment & &\\
+         7 & Confidence in approximate computing is increased& Social&  \\
+    \end{tabular}
+    \caption{Table with sustainability impacts}
+    \label{tab:my_label}
+\end{table}
 
-Figure~\ref{fig:SusAF_diagram} shows how the different aspects of sustainability relate to each other. The numbers correspond to the entries in table~\ref{table:SusAF_table}. The arrows show in what direction the different sustainability outcomes may affect the other outcomes.
-
-\todo[inline]{create table}
 
 \begin{figure}
     \centering
