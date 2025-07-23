@@ -4,7 +4,7 @@ The goal of this thesis was to gauge the fault tolerance of approximate computin
 
 The tools that were tested were floatsmith and \taffo{}.
 
-Prerequisite to testing the tools is installing the tools. \taffo{} depends on LLVM 14 or 15 to run, and is at the time of writing not compatible with newer versions of LLVM (the most recent version is 20). To install LLVM 15 you can build it from the source code following the instructions found at \href{llvm.org}{the LLVM website}. On certain GNU/linux distributions you may also install LLVM through your package manager (if supported by the LLVM organization), but you may need to add the LLVM repository  to your package manager of choice for this to work. 
+Prerequisite to testing the tools is installing the tools. \taffo{} depends on LLVM 14 or 15 to run, and is at the time of writing not compatible with newer versions of LLVM (the most recent version is 20). To install LLVM 15 you can build it from the source code following the instructions found at the llvm website, \href{llvm.org}{llvm.org}. On certain GNU/linux distributions you may also install llvm through your package manager (if supported by the LLVM organization), but you may need to add the LLVM repository  to your package manager of choice for this to work. 
 
 Building \taffo{} was only successful when using pre-built binaries. 
 The other tool that was used was floatsmith. This can be installed the easiest using their provided docker image, and mounting the project you want to perform experiments on.
