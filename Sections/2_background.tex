@@ -67,7 +67,8 @@ Fixed point decimal numbers are represented by allocating a fixed amount of bits
 
 \todo{should I include description of how to perform math with fixed point numbers in code?}
 
-Therefore, depending on the program, the numerical values for the bit representations in figure~\ref{fig:fixed_point_representation} could be 102 for the positive and -102 for the negative if we do not use a scaling factor, or if we decide that the three lower bits should be the fractional part of the number, to get our output number we must perform a right shift three places for the integer part of the number: 1100, which gives us the integer 12. The rightmost bits also have to be scaled by the same factor, i.e. $2^3$. To represent this as a decimal number requires us to divide by the scaling factor. 110 in binary is the same as 6 in integer representation. This gives us $6/8 = 0.75$, making the number represented 12.75.
+Therefore, depending on the program, the numerical values for the bit representations in figure~\ref{fig:fixed_point_representation} could be 102 for the positive and -102 for the negative if we do not use a scaling factor, or if we decide that the three lower bits should be the fractional part of the number, to get our output number we must perform a right shift three places for the integer part of the number: 1100, which gives us the integer 12. The rightmost bits also have to be scaled by the same factor, i.e. $2^3$. To represent this as a decimal number requires us to divide by the scaling factor. 110 in binary is the same as 6 in integer representation. This gives us $6/8 = 0.75$, making the number represented 12.75. For more details, see~\citet{yates2009fixed}.
+
 
 Fixed point numbers can represent a smaller range of numbers with the same amount of bits as a floating point representation, and with lower precision. The flip side is that they are in general easier for a processor to perform computations on. 
 
