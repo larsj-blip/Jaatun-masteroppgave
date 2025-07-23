@@ -49,8 +49,8 @@ Want to measure developmental faults as well.
             - LoC / week
             - features / month
 
-    Not measuring statistics! 
-    Injecting different types of developmental faults, and evaluating their effects.
+Not measuring statistics! 
+Injecting different types of developmental faults, and evaluating their effects.
 
 Looking at floatsmith: tool that makes it easier to run benchmarks. Given up on Taffo! Difficult to set up! Only supports certain versions of llvm. difficult to maintain LLVM-compatible tools when toolchain changes a lot around it. Also difficult to set up, requires a lot of work to get working, have to build llvm from source and then build taffo, a lot of errors with dependencies. (create tests for configuration of system??)
 
@@ -101,6 +101,7 @@ The biggest speedup comes from the seidel-2d benchmark, will look at that.
 
 
 Injected errors: I think it is neccessary to look at domain-specific errors: e.g. inject errors inside TAFFO annotations, how can this affect the program? 
+
 Still no good grouping of errors. I am not sure what kinds of errors I should inject! Need to start simple:
 I will try to inject simple faults to crash the program. Will run it with cmake, ignoring errors, and comparing between approximated code and non-approximated code. 
 Then I can think about other facets. Start simple
@@ -112,16 +113,15 @@ create simple llvm pass that performs loop perforation? only if annotated
     Other approximate computing techniques:
     memoization? Can this be done dynamically?
 
-
-
-
 Started performing fault injection.
 
 First, doing fault injection on seidel-2d benchmark in polybench suite. This is because TAFFO has pre-made build and execute scripts that may help with simplifying usage. 
+
 There is a "validate" script that outputs the average results of the execution, giving absolute (average) error and error percentage, as well as potential speedup. Some of the benchmarks don't even achieve speedups when using fixed point implementation instead of floating point representation.
+
 The validate script was not very clearly written, so I had to investigate what the variables actually meant and what the output actually meant. After doing this I could start the fault injection.
 
-First I injected some simple faults (what are they called again...) in the logic operators in loops, to see whether the program still ran, and whether accuracy dropped differently between the two variables.
+The fault injection campaign included performing simple mutation-testing-like fault injections directly in C-code. This included actions like inverting the logic operators in loops, such as negating an equality check in a loop directive, to see whether the program still ran, and whether accuracy dropped differently between the two variables.
 \begin{figure}
     \centering
     \includegraphics[width=0.5\linewidth]{Images/injected_basic_error.png}
@@ -134,8 +134,8 @@ slightly higher error in the fault injected version. This means that the fault c
 \begin{verbatim}
 [01:07 PM]-[lars@lars-Latitude-7310]-[~/.../test/fault-injected-polybench-cpu]- |improve_readability U:1 ?:15 ✗|
 $ ./run_faulty_seidel_benchmark.sh 
-[ ok ] ./stencils/seidel-2d/faulty-seidel-2d.c
-[ ok ] ./stencils/seidel-2d/faulty-seidel-2d.c
+[ ok ] ./stencils/seidel-2d/faulty-seidel-2d.c 
+[ ok ] ./stencils/seidel-2d/faulty-seidel-2d.c 
           avg_absolute_error          avg_percentage_error                 fixed_point_time_average fixed_point_value_invalid_count floating_point_time_average floating_point_value_invalid_count speedup                       
 seidel-2d  0.000102257390319354703125  0.0001017454833562187286071162135 %  0.077007 seconds         0                               0.141137 seconds            0                                  1.832781435453919773527081954
 
@@ -146,6 +146,8 @@ $ ./run_seidel_benchmark.sh
           avg_absolute_error          avg_percentage_error                 fixed_point_time_average fixed_point_value_invalid_count floating_point_time_average floating_point_value_invalid_count speedup                       
 seidel-2d  0.000102525901793475199375  0.0001020126506449179568796360769 %  0.077005 seconds         0                               0.144294 seconds            0                                  1.873826374910720083111486267
 \end{verbatim}
+
+
 
 
 further modifications below:
@@ -175,8 +177,6 @@ resulted in these results:
 [ ok ] ./stencils/seidel-2d/faulty-seidel-2d.c
           avg_absolute_error         avg_percentage_error                 fixed_point_invalid_result_count fixed_point_time_average floating_point_invalid_result_count floating_point_time_average speedup                       
 seidel-2d  0.00010099707543756559375  0.0001004914776904355906214804212 %  0                                0.105733 seconds         0                                   0.206827 seconds            1.956125334569150596313355338
-
-
 \end{verbatim}
 
 
@@ -208,7 +208,7 @@ seidel-2d  0.00010298246416630812875  0.00009384795886079763862937845899 %  0   
 \end{verbatim}
 
 
-Seidel is a "stencil computation" (think about heat advection equation we used in parallel computation), which is a set of operations that are applied to a grid of input data. The Seidel method is used to find the $x$ in $A * x = b$, where A is a matrix and b is an output vector. (internet says that it is less efficient than jacobi method (source for this??). It can be used to compute (iteratively) the x vector, creating an estimation that improves for each iteration, approaching a correct result.
+Seidel is a "stencil computation" (think about heat advection equation we used in parallel computation), which is a set of operations that are applied to a grid of input data. The Seidel method is used to find the $x$ in $A * x = b$, where A is a matrix and b is an output vector, and A and b is known. It can be used to compute (iteratively) the x vector, creating an estimation that improves for each iteration, approaching a correct result.
 
 
 other computations in benchmark:

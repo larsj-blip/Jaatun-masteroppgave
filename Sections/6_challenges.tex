@@ -6,23 +6,29 @@ Something something always expect the unexpected.
 
 this project has been a masterclass in what \textit{not} to do when working on a long term project.
 
+\subsection{Availability of Approximate Computing Tools}
+There are papers that describe approximate computing tools that use a different approach to approximate computing. Of these, Sculptor~\citep{li2018sculptor} and Green~\citep{baek2010green} were promising. Sculptor is described as a tool that implements dynamic loop perforation that is more complex than just removing certain iterations in a loop. Green is a framework that aids a programmer in balancing the need for approximating functions and loops and quality of service, but doesn't itself perform any transformations in code. 
+
+While both papers cited describe the operation of a software tool, the tool is nowhere to be found on the internet. Contacting the authors yielded not as much as even a response. 
+
+Reproducibility is one of the most important parts of a scientific report.
+It allows researchers to verify the findings independent of the original authors and their biases.
+If there is a paper that builds results or data produced by using a program that is either not released or not able to run, the results contained within are not easily verifiable and reproducible.
+
 \subsection*{Software}
 Code quality is a concept that is difficult to quantify exactly.
 It consists of many factors that relate to the code itself, such as clarity, lack of unnecessary duplication,
 test coverage (this one is actually easy to quantify).
 Other factors relate to the development environment of the code, for instance whether the codebase is built using
 continuous integration and continuous deployment.
-A trend (anectotal for now) in software produced in scientific studies, is that they do not generally follow established norms and rules for software development.
-This leads to code that is not easy to understand (for instance, using
-variable names such as x and y), code that is difficult to continue work on, and perhaps the most critical: code that
-does not run.
-Even worse than writing a paper on a new type of software that is not written using common coding practices, is not making the code that you have written a paper about available to the public.
 
-Reproducibility is one of the most important parts of a scientific paper.
-It allows researchers to verify the findings independent of the original authors and their biases.
-If there is a paper that builds results or data produced by using a program that is either not released or not able to run, the results contained within are not easily verifiable and reproducible.
+% A trend (anectotal for now) in software produced in scientific studies, is that they do not generally follow established norms and rules for software development.
+% This leads to code that is not easy to understand (for instance, using
+% variable names such as x and y), code that is difficult to continue work on, and perhaps the most critical: code that
+% does not run.
+% Even worse than writing a paper on a new type of software that is not written using common coding practices, is not making the code that you have written a paper about available to the public.
 
-Multiple approximate computing tools described in papers found in the initial study for this thesis, such as green CITE and \ldots, were simply not available, to a degree invalidating the results in the study.
+% Multiple approximate computing tools described in papers found in the initial study for this thesis, such as green CITE and \ldots, were simply not available, to a degree invalidating the results in the study.
 
 FlexFloat, another tool found in the study, allows users to manually modify the mantissa and exponent width of a floating point variable, and emulate these custom types on architechtures that do not have them. The tool also allows users to investigate how the error propagates through the program, and choose a fitting custom floating point type. This tool requires building software with these types in mind, and therefore is time consuming to implement for a pre-existing project. Building this tool from the source code was not easily done, however the developers provided a pre-built docker image that was quick to get running.
 
