@@ -1,10 +1,10 @@
 \section{Method}
 
-The goal of this thesis was to gauge the fault tolerance of approximate computing tools using fault injection. The faults in question were injected in software for practical reasons as hardware fault injection requires significantly more effort, and in LLVM-IR in an effort to make the results applicable regardless of programming language.
+The goal of this thesis was to gauge the fault tolerance of approximate computing tools using fault injection. The faults in question were injected in software for practical reasons as hardware fault injection requires significantly more effort, and in LLVM bytecode in an effort to make the results applicable regardless of programming language.
 
 The tools that were tested were floatsmith and \taffo{}.
 
-Prerequisite to testing the tools is installing the tools. \taffo{} depends on LLVM 14 or 15 to run, and is at the time of writing not compatible with newer versions of LLVM (the most recent version is 20). To install LLVM 15 you can build it from the source code following the instructions found at \href{llvm.org}{the LLVM website}. On certain GNU/linux distributions you may also install llvm through your package manager (if supported by the LLVM organization), but you may need to add the LLVM repository  to your package manager of choice for this to work. 
+Prerequisite to testing the tools is installing the tools. \taffo{} depends on LLVM 14 or 15 to run, and is at the time of writing not compatible with newer versions of LLVM (the most recent version is 20). To install LLVM 15 you can build it from the source code following the instructions found at \href{llvm.org}{the LLVM website}. On certain GNU/linux distributions you may also install LLVM through your package manager (if supported by the LLVM organization), but you may need to add the LLVM repository  to your package manager of choice for this to work. 
 
 Building \taffo{} was only successful when using pre-built binaries. 
 The other tool that was used was floatsmith. This can be installed the easiest using their provided docker image, and mounting the project you want to perform experiments on.
@@ -35,15 +35,15 @@ Bitwise fault injection was done thorugh manually performing an XOR operation in
     \label{fig:xor_operation}
 \end{figure}
 
-This was applied directly in LLVM-IR using LLVM-IR commands to perform a bit flip on a data variable in the program. Code listing~\ref{listing:llvm_ir_fixed} shows how the bit flip was implemented for the fixed point implementation, and listing~\ref{listing:llvm_ir_float} shows the bitflip for the floating point implementation.
+This was applied directly in LLVM bytecode using LLVM bytecode commands to perform a bit flip on a data variable in the program. Code listing~\ref{listing:llvm_ir_fixed} shows how the bit flip was implemented for the fixed point implementation, and listing~\ref{listing:llvm_ir_float} shows the bitflip for the floating point implementation.
 
 
 
-The result of a division is selected as the value to perform fault injection on as there are only two division operations in the benchmark source code, one in the data generation part of the code, and one in the main computational kernel. These two division operations can be distinguished from each other through the fact that the division in the main computational kernel divides a variable by the constant value 9. This constant value is preserved directly in LLVM-IR, which makes it trivial to find the division operation in the data preparation kernel.\footnote{The fixed point implementation actually contains three division operations, of which one is a floating point division. The origin of this floating point division operation is unclear, but it can be safely disregarded for the purposes of this fault injection campaign.}
+The result of a division is selected as the value to perform fault injection on as there are only two division operations in the benchmark source code, one in the data generation part of the code, and one in the main computational kernel. These two division operations can be distinguished from each other through the fact that the division in the main computational kernel divides a variable by the constant value 9. This constant value is preserved directly in LLVM bytecode, which makes it trivial to find the division operation in the data preparation kernel.\footnote{The fixed point implementation actually contains three division operations, of which one is a floating point division. The origin of this floating point division operation is unclear, but it can be safely disregarded for the purposes of this fault injection campaign.}
 Two temporary variables, \%temp1 and \%temp2, are introduced, where \%temp1 is a 64 bit integer with value 1 shifted left however many bits necessary to inject a bit in the desired location. Listing~\ref{listing:llvm_ir_fixed} injects a bit in bit index number 4, making the last 8 bits of \%temp1 look like the mask number (with the bit highlighted in red) shown in figure~\ref{fig:xor_operation}.
 The variable \%temp2 stores the result of the XOR operation between the result of the division in \%18 and the bit mask from \%temp1, and is then placed where \%18 ordinarily would be in the variable \%s10\_22fixp4.
 
-\begin{lstlisting}[caption=fixed point bit flip in llvm-ir, label=listing:llvm_ir_fixed]
+\begin{lstlisting}[caption=fixed point bit flip in LLVM bytecode, label=listing:llvm_ir_fixed]
   %17 = sext i32 %0 to i64, !taffo.info !45
   %18 = sdiv i64 %16, %17, !taffo.info !109
   %temp1 = shl i64 1, 4
@@ -51,7 +51,7 @@ The variable \%temp2 stores the result of the XOR operation between the result o
   %s10_22fixp4 = trunc i64 %temp2 to i32, !taffo.info !110
 \end{lstlisting} 
 
-\begin{lstlisting}[caption=floating point bit flip in llvm-ir, label=listing:llvm_ir_float]
+\begin{lstlisting}[caption=floating point bit flip in LLVM bytecode, label=listing:llvm_ir_float]
   %temp1 = fdiv double %24, %26
   %temp2 = shl i64 1, 4
   %temp3 = bitcast double %temp1 to i64
