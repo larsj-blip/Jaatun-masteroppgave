@@ -4,41 +4,48 @@ The results of the thesis work consist of a fault injection campaign on a benchm
 
 
 \subsection{\Taffo{}}
-The most significant results of the fault injection for a single benchmark can be found in listing~\ref{lst:injection_results}. The complete output can be found in appendix~\ref{appendix:complete_injection_results}. Outputs from the polybench benchmarks are stored as text files. Results from a benchmark run are stored as string sequences of decimals, separated by spaces, which are compared to the unmodified floating point implementation. The output seen in listing~\ref{lst:injection_results} is the average difference per value in the file between the fault injected version and the unmodified floating point version.   
+The most significant results of the fault injection for a single benchmark can be found in listing~\ref{lst:injection_results}. The complete output can be found in appendix~\ref{appendix:complete_injection_results}. Outputs from the polybench benchmarks are stored as text files. Results from a benchmark run are stored as string sequences of decimals, separated by spaces, which are compared to the unmodified floating point implementation. Table~\ref{table:injection_results} shows the average difference per data point in the output files of the fault injected versions and the unmodified floating point version.   
 The first column shows the filename where the output from the executable is stored. The filename is built from the benchmark name, which in this case is seidel-2d. The next part of file name contains the location of the injected bit in the variable, with bit\_no\_0 representing a bit flip in the least significant bit of the variable. The final part of the filename specifies whether the file output stems from a floating point implementation or a fixed point implementation.  This holds for all but the first fixed point implementation of the benchmark which was not subjected to fault injection, this is the entry with filename seidel-2d.txt.
 
 The second column shows the result of a comparison between the unmodified floating point implementation of the benchmark, seidel-2d, and the implementation specified in the leftmost column. The value is calculated by taking the absolute value of the difference of each value at index [x] for all values of x, and dividing the accumulated difference by the amount of values. This gives the average difference per data point between the two outputs.
 
 The values in column three are redundant, And is present only for consistency with the existing comparison script. Taking the first row, seidel-2d.float.txt, the value in the second column, 0.0, corresponds with the value in column three in the second row, seidel-2d.txt. In other words, for fixed point files, the third column shows the second column values for the floating point files, and opposite for the floating point files. This was done because this was quicker than implementing sorting for the print function in the comparison script. The outputs in listing~\ref{lst:injection_results} and in appendix~\ref{appendix:complete_injection_results} are ordered manually.
 
-\begin{verbatim}
-Filename                        Average Difference From Control         Alternative Implementation Results
-seidel-2d.float.txt             0.0                                     0.00010252590179347587
-seidel-2d.txt                   0.00010252590179347587                  0.0
-seidel-2d_bit_no_0.fixed.txt    0.00010252738737963263                  4.526846432428844e-15 
-seidel-2d_bit_no_0.float.txt    4.526846432428844e-15                   0.00010252738737963263 
-seidel-2d_bit_no_1.fixed.txt    0.00010252973353766834                  7.836499591601375e-15
-seidel-2d_bit_no_1.float.txt    7.836499591601375e-15                   0.00010252973353766834
-seidel-2d_bit_no_2.fixed.txt    0.00010242978918456464                  1.0070183402433041e-14
-seidel-2d_bit_no_2.float.txt    1.0070183402433041e-14                  0.00010242978918456464
-seidel-2d_bit_no_3.fixed.txt    0.00010269591987037501                  1.7122632695390493e-14
-seidel-2d_bit_no_30.fixed.txt   240.38767306192983                      8.453350257722744e-07
-seidel-2d_bit_no_30.float.txt   8.453350257722744e-07                   240.38767306192983
-seidel-2d_bit_no_31.fixed.txt   432.92573090152945                      2.020661384195993e-06
-seidel-2d_bit_no_31.float.txt   2.020661384195993e-06                   432.92573090152945
-seidel-2d_bit_no_32.fixed.txt   0.00010252590179347587                  6.188653891382238e-06
-seidel-2d_bit_no_32.float.txt   6.188653891382238e-06                   0.00010252590179347587
-seidel-2d_bit_no_60.fixed.txt   0.00010252590179347587                  1.1633619119162309e+79
-seidel-2d_bit_no_60.float.txt   1.1633619119162309e+79                  0.00010252590179347587
-seidel-2d_bit_no_61.fixed.txt   0.00010252590179347587                  1.3470810631989899e+156
-seidel-2d_bit_no_61.float.txt   1.3470810631989899e+156                 0.00010252590179347587
-seidel-2d_bit_no_62.fixed.txt   0.00010252590179347587                  nan
-seidel-2d_bit_no_62.float.txt   nan                                     0.00010252590179347587
-seidel-2d_bit_no_63.fixed.txt   0.00010252590179347587                  201.00625000002313
-seidel-2d_bit_no_63.float.txt   201.00625000002313                      0.00010252590179347587
-\end{verbatim}
-\label{lst:injection_results}
+
+\begin{longtable}{lll}
+\label{lst:injection_results}\\
 \caption{The table shows the output of the simple python script that collects the absolute differences between the original floating point implementation and the fault injected versions of the benchmark.}
+{\bf Filename} & {\bf Average Difference} & {\bf Alternative } \\
+             & {\bf From Control }      & {\bf Implementation Results}\\
+ 
+    seidel-2d.float.txt & 0.0   & 0.00010252590179347587 \\
+    seidel-2d.txt & 0.00010252590179347587 & 0.0 \\
+    seidel-2d\_bit\_no\_0.fixed.txt & 0.00010252738737963263 & 4.526846432428844e-15  \\
+    seidel-2d\_bit\_no\_0.float.txt &  4.526846432428844e-15 & 0.00010252738737963263 \\
+    seidel-2d\_bit\_no\_1.fixed.txt & 0.00010252973353766834 & 7.836499591601375e-15 \\
+    seidel-2d\_bit\_no\_1.float.txt & 7.836499591601375e-15 & 0.00010252973353766834 \\
+    seidel-2d\_bit\_no\_2.fixed.txt & 0.00010242978918456464 & 1.0070183402433041e-14 \\
+    seidel-2d\_bit\_no\_2.float.txt & 1.0070183402433041e-14 & 0.00010242978918456464 \\
+    seidel-2d\_bit\_no\_3.fixed.txt & 0.00010269591987037501 & 1.7122632695390493e-14 \\
+    seidel-2d\_bit\_no\_3.float.txt & 1.7122632695390493e-14 & 0.00010269591987037501 \\
+    seidel-2d\_bit\_no\_30.fixed.txt & 240.38767306192983 & 8.453350257722744e-07 \\
+    seidel-2d\_bit\_no\_30.float.txt & 8.453350257722744e-07 & 240.38767306192983 \\
+    seidel-2d\_bit\_no\_31.fixed.txt & 432.92573090152945 & 2.020661384195993e-06 \\
+    seidel-2d\_bit\_no\_31.float.txt & 2.020661384195993e-06 & 432.92573090152945 \\
+    seidel-2d\_bit\_no\_32.fixed.txt & 0.00010252590179347587 & 6.188653891382238e-06 \\
+    seidel-2d\_bit\_no\_32.float.txt & 6.188653891382238e-06 & 0.00010252590179347587 \\
+    seidel-2d\_bit\_no\_60.fixed.txt & 0.00010252590179347587 & 1.1633619119162309e+79 \\
+    seidel-2d\_bit\_no\_60.float.txt & 1.1633619119162309e+79 & 0.00010252590179347587 \\
+    seidel-2d\_bit\_no\_61.fixed.txt & 0.00010252590179347587 & 1.3470810631989899e+156 \\
+    seidel-2d\_bit\_no\_61.float.txt & 1.3470810631989899e+156 & 0.00010252590179347587 \\
+    seidel-2d\_bit\_no\_62.fixed.txt & 0.00010252590179347587 & nan \\
+    seidel-2d\_bit\_no\_62.float.txt & nan   & 0.00010252590179347587 \\
+    seidel-2d\_bit\_no\_63.fixed.txt & 0.00010252590179347587 & 201.00625000002313 \\
+    seidel-2d\_bit\_no\_63.float.txt & 201.00625000002313 & 0.00010252590179347587 \\
+    %\end{tabular}%
+%  \label{tab:addlabel}%
+\end{longtable}%
+
 
 The control, seidel-2d.float.txt, is identical to itself, so the difference is 0.0. Initially the fixed point difference is many orders of magnitude larger than the floating point difference, for the result from injected bit at index 0, the average difference between fixed point and control is larger by an order of magnitude of 11 compared to the difference between the floating point implementation. 
 
@@ -55,36 +62,48 @@ Listing~\ref{lst:validate_original} shows one of the functions in the original s
 
 \begin{lstlisting}[language=python,label=lst:validate_new,caption=Validate new]
 def compute_difference(fixed_point_data, floating_point_data):
-  successful_iterations = 0
-  total_difference_between_floating_point_and_fixed_point_values = Decimal(0)
-  total_floating_point_value = Decimal(0)
-  fixed_point_invalid_result_count = 0
-  floating_point_invalid_result_count = 0
-  error_threshold = Decimal('0.01')
+    successful_iterations = 0
+    total_difference_floating_and_fixed_point_values = Decimal(0)
+    total_floating_point_value = Decimal(0)
+    fixed_point_invalid_result_count = 0
+    floating_point_invalid_result_count = 0
+    error_threshold = Decimal('0.01')
 
-  for single_value_fixed_point, single_value_floating_point in zip(fixed_point_data, floating_point_data):
-    fixed_point_value, floating_point_value = Decimal(single_value_fixed_point), Decimal(single_value_floating_point)
+    for single_value_fixed_point, single_value_floating_point in zip(fixed_point_data, floating_point_data):
+        fixed_point_value, floating_point_value = Decimal(single_value_fixed_point), Decimal(
+            single_value_floating_point)
 
+        if not fixed_point_value.is_finite():
+            fixed_point_invalid_result_count += 1
+        elif not floating_point_value.is_finite():
+            floating_point_invalid_result_count += 1
+            fixed_point_invalid_result_count += 1
+        elif ((floating_point_value + fixed_point_value).copy_abs() - (
+                floating_point_value.copy_abs() + fixed_point_value.copy_abs())) > error_threshold:
+            fixed_point_invalid_result_count += 1
+        else:
+            successful_iterations += 1
+            total_difference_floating_and_fixed_point_values += (
+                        floating_point_value - fixed_point_value).copy_abs()
+            total_floating_point_value += floating_point_value
 
-    if not fixed_point_value.is_finite():
-      fixed_point_invalid_result_count += 1
-    elif not floating_point_value.is_finite():
-      floating_point_invalid_result_count += 1
-      fixed_point_invalid_result_count += 1
-    elif ((floating_point_value + fixed_point_value).copy_abs() - (floating_point_value.copy_abs() + fixed_point_value.copy_abs())) > error_threshold:
-      fixed_point_invalid_result_count += 1
-    else:
-      successful_iterations += 1
-      total_difference_between_floating_point_and_fixed_point_values += (floating_point_value - fixed_point_value).copy_abs()
-      total_floating_point_value += floating_point_value
-      
-  average_error_percentage = (total_difference_between_floating_point_and_fixed_point_values / total_floating_point_value * 100) if total_floating_point_value != 0 and successful_iterations > 0 else -1
-  average_absolute_error = (total_difference_between_floating_point_and_fixed_point_values / successful_iterations) if successful_iterations > 0 else -1
-      
-  return {'fixed_point_invalid_result_count': fixed_point_invalid_result_count if successful_iterations > 0 else "no successful iterations", \
-          'floating_point_invalid_result_count': floating_point_invalid_result_count if successful_iterations > 0 else "no successful iterations",\
-          'avg_percentage_error': str(average_error_percentage) + " %" if average_error_percentage != -1 else "no successful iterations",
-          'avg_absolute_error': average_absolute_error if average_absolute_error != -1 else "no successful iterations"}
+    average_error_percentage = (
+                total_difference_floating_and_fixed_point_values / total_floating_point_value * 100) \
+        if total_floating_point_value != 0 and successful_iterations > 0 else -1
+    average_absolute_error = (
+                total_difference_floating_and_fixed_point_values / successful_iterations) \
+        if successful_iterations > 0 else -1
+
+    return {
+        'fixed_point_invalid_result_count': 
+            fixed_point_invalid_result_count if successful_iterations > 0 else "no successful iterations",
+        'floating_point_invalid_result_count': 
+            floating_point_invalid_result_count if successful_iterations > 0 else "no successful iterations",
+        'avg_percentage_error': 
+            str(
+            average_error_percentage) + " %" if average_error_percentage != -1 else "no successful iterations",
+        'avg_absolute_error': average_absolute_error if average_absolute_error != -1 else "no successful iterations"}
+
 \end{lstlisting} 
 
 
