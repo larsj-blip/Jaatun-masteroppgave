@@ -13,6 +13,7 @@
   postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
 }
 \newcommand\taffo{{\em Taffo}}
+\newcommand\floatsmith{{\em FloatSmith}}
 
 
 % Beginning of document
@@ -23,25 +24,50 @@
 
 % Defining front matter settings (Norsk: innstillinger for forord m.m.)
 \frontmatter
+\newpage
+\import{./Sections/}{abstract}
 
+\newpage
+\import{./Sections/}{foreword}
+
+
+\newpage
 % Inserting table of contents
 \tableofcontents
 
 % Inserting list of figures & list of tables
+\listoffigures
+\listoftables
+
+\newpage
+\import{./Sections/}{ai-usage}
 
 % Defining main matter settings (Norsk: innstillinger for hoveddelen av teksten)
 \mainmatter
 
-
+\newpage
 \import{./Sections/}{1_introduction}
+\newpage
 \import{./Sections/}{2_background}
+\newpage
 \import{./Sections/}{3_method}
+\newpage
 \import{./Sections}{4_results}
+\newpage
 \import{./Sections/}{5_discussion}
+\newpage
 \import{./Sections/}{6_challenges}
+\newpage
 \import{./Sections/}{7_conclusion}
-\import{./Sections}{sustainability_analysis}
+
+\newpage
 \import{./Sections/}{8_further_work}
+
+\appendix
+\newpage
+\import{./Sections}{sustainability_analysis}
+
+\newpage
 \import{./Sections}{9_appendix.tex}
 % Printing bibliography
 \newpage
