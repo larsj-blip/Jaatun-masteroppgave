@@ -1,14 +1,13 @@
-\section{Background} 
 
 This thesis concerns the fields of approximate computing and reliability. This section contains the context for the topics treated within. 
 
-\subsection{Approximate Computing}
-Approximate computing, transprecision computing, mixed- and reduced precision computing are concepts that unite under the goal of trying to improve computer resource usage or computation speed through approximation in some form in the calculations in a program. 
+\section{Approximate Computing}
+Approximate computing, transprecision computing~\citep{malossi2018transprecision}, mixed- and reduced precision computing~\citep{cherubin2019taffo} are related concepts that unite under the goal of trying to improve computer resource usage or computation speed through approximation in some form in the calculations in a program. 
 
 Approximate computing does not require any special tooling to implement, and isn't dependent on specialized hardware either. Some examples include memoization~\citep{mittal2016survey}, a technique that involves caching results of expensive computations,  loop perforation~\citep{li2018sculptor}, which is removing some iterations of certain types of loops, or utilizing types that take up less bits in memory, for instance replacing 64 bit numbers with 32 bit numbers~\citep{cherubin2019taffo, tagliavini2018flexfloat, floatsmith_paper}. These methods can all be performed by the programmer without the use of tools. Doing all this manually however requires the programmer to instrument the program to verify that the output is within the required bounds of precision, and whether any of the steps taken makes the program behave unexpectedly. For this reason there have been created several tools aimed at research on the utility of approximate computing that encompasses both the execution of the code and verification of the results. 
 
 %figures of approximate computing techniques?
-\subsubsection{Approximate Computing Through Reducing the Amount of Bits}
+\subsection{Approximate Computing Through Reducing the Amount of Bits}
 \label{section:approximate_computing_through_reducing_bits}
 
 Of all the techniques listed, only in the bit width modification category were there any software available for download or development. These are \floatsmith{}~\citep{floatsmith_paper} and \taffo{}~\citep{cherubin2019taffo}. In the papers describing them they are capable of reducing the precision of a program written using floating point variables through the usage of C/C++ annotations (that can normally be safely ignored by a compiler), and propagates changes throughout the program without having to annotate all variables in the program.
@@ -69,58 +68,56 @@ CPUs that support floating point math have dedicated hardware for floating point
 
 Fixed point decimal numbers are represented by allocating a fixed amount of bits for the fractional part, and a fixed number of bits for the integer part. This is implicit and not visible in how a processor treats the numbers, which means that the processor can use the same hardware for operating on fixed point decimal numbers as regular integers. This is often faster than performing operations on floating point numbers. It becomes the programmer's job to manage which bits are in front of and behind the decimal point within the code itself (in C, and other languages that don't directly support fixed point decimal math). 
 
-
 \todo{should I include description of how to perform math with fixed point numbers in code?}
 
-Therefore, depending on the program, the numerical values for the bit representations in figure~\ref{fig:fixed_point_representation} could be 102 for the positive and -102 for the negative if we do not use a scaling factor, or if we decide that the three lower bits should be the fractional part of the number, to get our output number we must perform a right shift three places for the integer part of the number: 1100, which gives us the integer -4. Shifting a binary to the right is the same as dividing by two to the power of however many positions were shifted, so in this case that number is $2^3 = 8$. This is the scaling factor. The rightmost part of the fixed point number isdivided by this scaling factor to get the part of the number behind the decimal point. 110 in binary is the same as 6 in integer representation which gives us $6/8 = 0.75$, making the number represented 12.75. For more details, see~\citet{yates2009fixed}.
+Therefore, depending on the program, the numerical values for the bit representations in figure~\ref{fig:fixed_point_representation} could be 102 for the positive and -102 for the negative if we do not use a scaling factor, or if we decide that the three lower bits should be the fractional part of the number, to get our output number we must perform a right shift three places for the integer part of the number: 1100, which gives us the integer -4. Shifting a binary to the right is the same as dividing by two to the power of however many positions were shifted, so in this case that number is $2^3 = 8$. This is the scaling factor. The rightmost part of the fixed point number is divided by this scaling factor to get the part of the number behind the decimal point. 110 in binary is the same as 6 in integer representation which gives us $6/8 = 0.75$, making the number represented -4.75. To perform math on a fixed point number with implied fractional bits the processor does not treat the number differently, but the programmer needs to supply the CPU with different numbers. For instance, to add or subtract the integer 1 to the number, first we need to scale the number according to the scaling factor. In this case, this means shifting the number to the left three places, making the value we are adding/subtracting look like the value 8 to the CPU. Multiplication however requires no change in the numbers supplied.  For more details, see~\citet{yates2009fixed}.
 
 \taffo{} therefore depends on users of the program to annotate a variable that is to be converted to a fixed point type with the range of values it can have, which is used to decide how many bits is required to represent the number accurately enough as a fixed point number. 
 
 % These two tools were selected as they were two of the few tools that had source code available on the internet without having to beg the authors in the paper for crumbs. 
 
-There are other papers detailing different methods of approximate computing. Sadly, though they are described vividly in the papers, efforts to get a hold of these storied approximate computing tools proved fruitless. Following are some other examples of approximate computing approaches.
+There are other papers detailing different methods of approximate computing. Sadly, though they are described vividly in the papers, efforts to get a hold of these storied approximate computing tools proved fruitless. Following are some of the other examples of approximate computing approaches.
 % Though the tools described in the papers do not as far as I am concerned exist, the techniques exist, and can be applied manually.
 
-\subsubsection{Approximate Computing through Loop Perforation}
+\subsection{Approximate Computing through Loop Perforation}
 
 Loop perforation, described by \citet{li2018sculptor} and \citet{baek2010green}, works by skipping iterations in loops that iteratively get closer to an accurate number. The gauss-seidel benchmark included in the polybench CPU benchmark~\citep{polybench} is an example of a loop that may be optimized with loop perforation. Loop perforation would not work on just any loop, such as a loop reading in lines of data from a file, as this could cause data corruption and program crashes.
 
-\subsubsection{Approximate Computing through Memoization}
+\subsection{Approximate Computing through Memoization}
 
 Memoization consists of mapping the inputs of expensive functions to their outputs, and avoiding to re-run the function for the same input, thereby saving energy. This is described more in depth by \citet{mittal2016survey}.
 
 
-\subsection{Reliability through Fault Tolerance}
+\section{Reliability through Fault Tolerance}
 \label{section:Reliability_thorugh_fault_tolerance}
 
 Reliability is a concept that concerns itself with whether a system provides correct service or not. A system in this context could be a software component such as a software library, or an entire computer system coupled with software such as an ATM machine. Correct and incorrect service is not necessarily a rigid concept for all types of systems. In the case of an ATM machine, correct service requires cash withdrawals to match the amount withdrawn from an account exactly for all clients, while a computer vision face detection library that detects a face in 90 out of 100 images that contain faces may be considered correct service.
 
-
 Code quality is important to achieve fault tolerant code, and should be evaluated alongside the operational fault tolerance of a software tool. While the operational aspect is certainly important, i.e., how the code responds to faults that occur during operation, a project's code quality will affect the amount of faults that are created during the developmental phase, which carry equivalent risk of causing service failures during operation. 
 
-There are multiple papers on the investigation of fault tolerance through hardware fault injection, see section~\ref{section:Verifying_fault_tolerance} for a more thorough overview. Hardware fault injection can be performed through ionizing radiation, heat or applying local voltages to the hardware. Fault tolerance experiments such as these are performed mostly to evaluate hardware that will be subjected to harsh conditions. 
+There are multiple papers on the investigation of fault tolerance through hardware fault injection, see section~\ref{section:Verifying_fault_tolerance} for a more thorough overview. Fault injection is a controlled insertion of faults into a system, with the goal of observing the resulting state of the system with these additional faults inserted. Fault injection can be performed through ionizing radiation, heat or applying local voltages to the hardware. Fault tolerance experiments such as these are performed mostly to evaluate hardware that will be subjected to harsh conditions. 
 Fault injection can also be performed in software. For instance,~\citet{venkatagiri2019gem5} describe a software system that flips individual bits in the program, and simulates the running of these programs to find all bits in a program that are conducive to silent data corruptions (failures that don't stop the service delivery, but delivers an incorrect service).  G-SWFIT is a methodology of injecting software faults that would otherwise fall outside of what a programmer would normally catch during testing~\citep{natella2012fault}.
 
-
-
-\citet{avizienis2004basic} provide a stricter definition the concept of reliability, as well as dividing reliability into multiple related concepts. Of these, the most relevant to this thesis is the definitions of fault tolerance, service failure, errors, and faults.  
+\citet{avizienis2004basic} provides a stricter definition the concept of reliability, as well as dividing reliability into multiple related concepts. Of these, the most relevant to this thesis is the definitions of fault tolerance, service failure, errors, and faults.  
 
 Fault tolerance is a prerequisite of reliability. Fault tolerance is defined as the continued delivery of correct service in spite of faults present in the system. A fault is an artifact that may result in an error, and an error is an internal state of a part of the system that does not correspond with the defined correct states. An error does not necessarily end up affecting the external state (the output of the system), but the moment that an error does affect the external state to an incorrect state, this constitutes a service failure.
 
 \citet{avizienis2004basic} divide faults into two categories: developmental faults, or operational faults. Faults are divided into one of the two depending on when they occur: developmental faults occur during the development of the system, and operational faults occur while the system is providing service. A software bug would be a developmental fault, and a bit flip caused by ionizing radiation would constitute an operational fault.
 
-\subsubsection{Quantifying Fault Tolerance}
+\subsection{Quantifying Fault Tolerance}
 \label{section:Verifying_fault_tolerance}
 
 Different applications have different fault tolerance requirements; a satellite orbiting the earth would necessarily have much higher requirements with respect to operational fault tolerance due to ionizing radiation than a run-of-the-mill home computer. Developmental fault tolerance requirements in software governing an industrial complex will also be stricter than the software governing a smart home system. 
 
-Given these requirements, one way of verifying or quantifying the fault tolerance of a system is through fault injection. There are frameworks for injecting both operational and developmental faults allowing users to gauge fault tolerance in a way that otherwise would be difficult: Given a lack of the resources required to perform hardware fault injection as \citet{arlat1993fault} describe, software alternatives like Xception~\citep{carreira1998xception} that allows the user to emulate hardware bit flips in a program, or the Gem5-approxilyzer described by \citet{venkatagiri2019gem5} that allows users to simulate how single bit flips propagate instruction by instruction through a processor, can provide accurate alternatives.
+Given these requirements, one way of verifying or quantifying the fault tolerance of a system is through fault injection.
 
-Fault injection can and should also be performed during the developmental phase, with \citet{natella2012fault} describing an approach using fault statistics for a category of software to infer potential fault locations that would not be caught by regression testing. Evaluating tests by injecting faults that should be caught by those tests is a strategy commonly referred to as mutation testing, the goal of which is to create code "mutants" (versions of your code that contain an injected error), and then "killing" the mutants with the test suite, i.e.,  the test suite catches unexpected behavior through tests failing.
+There are frameworks for injecting both operational and developmental faults allowing users to gauge fault tolerance in a way that otherwise would be difficult: Given a lack of the resources required to perform hardware fault injection as \citet{arlat1993fault} describe, software alternatives like Xception~\citep{carreira1998xception} that allows the user to emulate hardware bit flips in a program, or the Gem5-approxilyzer described by \citet{venkatagiri2019gem5} that allows users to simulate how single bit flips propagate instruction by instruction through a processor, can provide accurate alternatives.
 
-\todo{need more background on software fault injection.}
+Fault injection can and should be performed during the developmental phase of both software and hardware systems. \citet{natella2012fault} describe an approach to software fault injection using fault statistics for a category of software to infer potential fault locations that would not be caught by regression testing. Evaluating tests by injecting faults that should be caught by those tests is a strategy commonly referred to as mutation testing, the goal of which is to create code "mutants" (versions of your code that contain an injected error), and then "killing" the mutants with the test suite, i.e.,  the test suite catches unexpected behavior through tests failing.
 
-\subsubsection{LLVM bytecode}
+When access to the source code is limited, faults can still be injected in software through the entry points provided in the code. In computer security circles one such approach is known as fuzzing~\citep{miller1990empirical}, and is useful both as a fault tolerance testing tool of non-open source binaries, and as a tool for simulating adversarial activity in the input interfaces of a tool.
+
+\subsection{LLVM bytecode}
 The fault injection performed in this thesis is performed in LLVM bytecode.
 LLVM bytecode is an assembly-like programming language used as an intermediate representation within the LLVM suite of compiler tools. LLVM is not an acronym, though in the early stages of the project it used to stand for Low Level Virtual Machine. These tools are mostly made for performing code transformations, and these transformations are made on LLVM bytecode. The LLVM tools relevant to this thesis is the core optimizer for optimizing code, and Clang for compiling C/C++~\citep{LLVM_homepage}.  %explain llvm 
 

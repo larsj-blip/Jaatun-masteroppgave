@@ -1,23 +1,22 @@
-\section{Method}
 
 The goal of this thesis was to gauge the fault tolerance of approximate computing tools using software fault injection. Hardware fault injection is prohibitively expensive and difficult, while software fault injection can also emulate hardware faults. The fault injection was performed in LLVM bytecode in an effort to make the results applicable regardless of programming language and to create the groundwork for the creation of an automated fault injection pass that can be created as further work.
 
 The tools that were tested were floatsmith and \taffo{}.
 
-\subsection{Installation}
+\section{Installation}
 Prerequisite to testing the tools is installing the tools. \taffo{} depends on LLVM 14 or 15 to run, and is at the time of writing not compatible with newer versions of LLVM (the most recent version is 20). To install LLVM 15 you can build it from the source code following the instructions found at the LLVM website, \href{llvm.org}{llvm.org}. On certain GNU/linux distributions you may also install LLVM through your package manager (if supported by the LLVM organization), but you may need to add the LLVM repository  to your package manager of choice for this to work. 
 
 Building \taffo{} was successful when using pre-built binaries. 
 The other tool that was used was floatsmith~\citep{floatsmith_paper}. This can be installed the easiest using their provided docker image, and mounting the project you want to perform experiments on.
 
-\subsection{Bitwise fault injection}
+\section{Bitwise fault injection}\label{section:bitwise_fault_injection}
 Bitwise fault injection was done thorugh manually performing an XOR (exclusive or) operation in LLVM bytecode on the values to be subjected to faults. Table~\ref{table:xor_truth_table} shows the truth table for two bit inputs through an XOR-gate. The output is 1 if and only if either input A or input B is 1 while the other is 0. If using input B as a bit mask of which bits to flip, we can see in the table that the output becomes the opposite of input A for all cases of input B being 1, and when input B is 0 all outputs are the same as input A, allowing us to flip a single bit at a time. An XOR operation on two 8-bit numbers is shown in figure~\ref{fig:xor_operation}. The output of the XOR operation shows that the output is the same as the input, except for the bit that is marked with red, which has been flipped.
 
 \begin{table}[htb]
     \centering
 \caption{Truth table for XOR function}
     \label{table:xor_truth_table}
-\begin{tabular}{c|c|c}\label{table:xor_truth_table}
+\begin{tabular}{c|c|c}
      input A& input B& XOR output \\
      0&0&0\\
      1&0&1\\
@@ -40,7 +39,7 @@ This was applied directly in LLVM bytecode using LLVM bytecode commands to perfo
 
 
 
-The result of a division is selected as the value to perform fault injection on as there are only two division operations in the benchmark source code, one in the data generation part of the code, and one in the main computational kernel. These two division operations can be distinguished from each other through the fact that the division in the main computational kernel divides a variable by the constant value 9. This constant value is preserved directly in LLVM bytecode, which makes it trivial to find the division operation in the data preparation function.\footnote{The fixed point implementation bytecode actually contains three division operations, of which one is a floating point division. The origin of this floating point division operation is unclear, but it is disregarded for this fault injection campaign.}
+The result of a division is selected as the value to perform fault injection on as there are only two division operations in the benchmark source code, one in the data generation part of the code, and one in the main computational kernel. These two division operations can be distinguished from each other through the fact that the division in the main computational kernel divides a variable by the constant value 9. This constant value is preserved directly in LLVM bytecode, which makes it trivial to find the division operation in the data preparation function.\footnote{The fixed point implementation bytecode actually contains three division operations, of which one is a floating point division. This is suspected to be dead code, but it is disregarded for this fault injection campaign.}
 Two temporary variables, \%temp1 and \%temp2, are introduced, where \%temp1 is a 64 bit integer with value 1 shifted left however many bits necessary to inject a bit in the desired location. Listing~\ref{listing:llvm_ir_fixed} injects a bit in bit index number 4, making the last 8 bits of \%temp1 equivalent with the binary number (with the bit highlighted in red) shown in figure~\ref{fig:xor_operation}.
 The variable \%temp2 stores the result of the XOR operation between the result of the division in the variable \%18 and the bit mask from \%temp1, and is then placed where variable \%18 ordinarily would be in the variable \%s10\_22fixp4.
 
