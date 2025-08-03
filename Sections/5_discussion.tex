@@ -1,6 +1,8 @@
-\todo[inline]{Noe tekst her}
 
-While the numerical results from performing the fault injection can be discussed, the process surrounding the fault injection campaign provided new perspectives and useful information as well. 
+
+
+The fault injection campaign produced largely expected results. The validity and significance of the results are less apparent. Most interesting is the process that yielded the results.
+
 
 \section{Fault Injection Method}
 
@@ -10,11 +12,9 @@ Performing mutation testing in the tests that assert the behavior of \taffo{} wo
 
 \section{Fault Injection Bit Flip Campaign}
 
-All faults in this campaign were injected in the data bits, not the instruction bits.
+All faults in this campaign were injected in the data bits, not the instruction bits. This puts the fault injection campaign in the same neighborhood as fuzzing, though only one bit is flipped at a time, and there are no other variations in the inputs to the benchmark.
 
 % This comparison is based on injecting faults within the data that is being operated on, not on opcodes or memory locations. This is to verify the change in behavior that changing the variable type incurs.
-
-
 
 The results from the fault injection were mostly expected: The deviations from the original answer for the floating point errors started low, then increased exponentially towards the most significant bits.
 
@@ -38,7 +38,7 @@ The graph shows that both the floating point values and the fixed point values i
     \label{fig:zoomed_out_graph}
 \end{figure}
 
-This can be explained by looking at the LLVM bytecode that is used to inject the faults, see listing~\ref{listing:llvm_ir_fixed}. Here you can see that while the result of the division is 64 bits, from dividing two 64 bit variables, one of the operands is originally a 32 bit integer that is extended to a 64 bit number. In the final line in the listing, the result of the division and bit flip is then truncated back to a 32 bit integer, thereby discarding the injected bit if it is injected over the bit at index 31, explaining the drop in error after bit 31.
+This drop can be explained by looking at the LLVM bytecode that is used to inject the faults, see listing~\ref{listing:llvm_ir_fixed}. Here you can see that while the result of the division is 64 bits, from dividing two 64 bit variables, one of the operands is originally a 32 bit integer that is extended to a 64 bit number. In the final line in the listing, the result of the division and bit flip is then truncated back to a 32 bit integer, thereby discarding the injected bit if it is injected over the bit at index 31, explaining the drop in error after bit 31.
 
 \begin{figure}[h!]
     \centering
@@ -91,10 +91,10 @@ If there is a paper that builds results or data produced by using a program that
 
 \section{Code quality}
 
-The comparison script written for the fault injection comparison is not perfect either. However, the assumptions are documented, and tests support and explain functionality. 
+% The comparison script written for the fault injection comparison is not perfect either. However, the assumptions are documented, and tests support and explain functionality. 
 %This is difficult to realize when using python as a scripting language, but at the very least variable names need to be descriptive, and file outputs need to follow the existing standards and descriptions (for instance not mislabeling an output as a .csv file).
 
-Some changes were apparent not because of the programming skills of the author, but simply because of an IDE tool highlighting errors that were easy to remedy. Figure~\ref{fig:IDE_highlighting} shows the highlighted error, which in this case is a keyword that does nothing. In this case the error is that the code describes functionality that is not possible.
+Some faults were apparent not because of the programming skills of the author, but simply because of an IDE tool highlighting errors that were easy to remedy. Figure~\ref{fig:IDE_highlighting} shows the highlighted error, which in this case is a keyword that does nothing. In this case the error is that the code describes functionality that is not possible.
 
 \begin{figure}[h]
     \centering
@@ -103,6 +103,9 @@ Some changes were apparent not because of the programming skills of the author, 
     \label{fig:IDE_highlighting}
 \end{figure}
 % There is a habit of writing code as if to be archived forever. The documentation lags behind, and there is no test suite for the tool
+
+This fault does nothing to affect how the program runs, however it may lead to confusion as it describes behavior that does not actually happen. 
+
 
 There are many aspects of programming that can be measured to provide an indication of code quality. One such example is test coverage, which measures how many lines of the written code is executed through tests, and a higher percentage of code executed in tests is better. Although a program has 100\% code coverage, this alone does not designate the program as a good program: The tests themselves need to specify what behavior they test, and the test needs to assert that the output aligns with the expected output, such that if there is a change in the code that changes this behavior the test should fail. Quantitative code quality metrics are intended to be used as an aid in writing good code, not as designators of good or bad code. 
 
@@ -159,6 +162,5 @@ int test2(int a)
 
 Instead of performing mutation testing on uncertain ground, the initial fault injection was performed directly in LLVM bytecode as described in section~\ref{section:bitwise_fault_injection}.
 
-\taffo{}, when called using the parameters in the existing compile script, produces LLVM bytecode files. These files are numbered according to which optimisation pass they represent in the \taffo{} compilation process. \taffo{} has a flag called emit-llvm that is supposed to emit LLVM bytecode, and does so, but this LLVM bytecode is not linked even though the \taffo{} command specifies that it should be, while also not producing any errors when compiling. To get LLVM bytecode that is linked you need to either link it manually, or take the existing LLVM bytecode intermediate files. This was discovered through troubleshooting. 
-
+\taffo{}, when called using the parameters in the existing compile script, produces LLVM bytecode files. These files are numbered according to which optimisation pass they represent in the \taffo{} compilation process. \taffo{} has a flag called emit-llvm that is supposed to emit LLVM bytecode, and does so, but this LLVM bytecode is not linked even though the \taffo{} command specifies that it should be, while also not producing any errors when compiling. To get LLVM bytecode that is linked you need to either link it manually, or take the existing intermediate LLVM bytecode files without specifying the --emit-llvm flag. This was discovered through troubleshooting, and the complete code for extracting the linked, ready-to-fault-inject files can be found in the copied polybench-cpu folder in the cloned \taffo{} repository located at \url{https://github.com/larsj-blip/TAFFO/tree/improve_readability/test/fault-injected-polybench-cpu}, see the file compile\_to\_LLVMIR.sh
 

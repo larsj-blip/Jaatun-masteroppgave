@@ -1,10 +1,10 @@
 
-The results of the thesis work consist of a fault injection campaign on a benchmark included in the \taffo{} repository and code additions. These additions reside in a clone of the \taffo{} repository hosted on \href{https://github.com/larsj-blip/TAFFO}{https://github.com/larsj-blip/TAFFO}. The results include the experiences gathered from using \taffo{} and floatsmith to compile a test benchmark.
+The results of the thesis work consist of a fault injection campaign on a benchmark included in the \taffo{} repository and code additions. These additions reside in a clone of the \taffo{} repository hosted on \url{https://github.com/larsj-blip/TAFFO} within the folder fault-injected-polybench-cpu and in a separate repository, the comparison script at \url{https://github.com/larsj-blip/Taffo-fault-injection-comparison}
 
 
 \section{Taffo}
-The most significant results of the fault injection for a single benchmark can be found in table~\ref{table:injection_results}. The complete output can be found in appendix~\ref{appendix:complete_injection_results}. Outputs from the polybench benchmarks are stored in text files as string sequences of decimals separated by spaces. Taking the outputs from the floating point without injected faults as the control, the element by element difference between the control and the fault injected program versions is added up, and divided by the amount of data points to get the average difference for all output values. Table~\ref{table:injection_results} shows the average difference per data point between the output files of the fault injected versions and the unmodified floating point version.   
-The first column shows the filename where the output from the executable is stored. The filename is built from the benchmark name, which in this case is seidel-2d. The next part of file name contains the location of the injected bit in the variable, with "bit\_no\_0" representing a bit flip in the least significant bit of the variable (at index 0). The final part of the filename specifies whether the file output stems from a floating point implementation or a fixed point implementation.
+The most significant results of the fault injection for a single benchmark can be found in table~\ref{table:injection_results}. The complete output can be found in appendix~\ref{appendix:complete_injection_results}. Outputs from the polybench benchmarks are stored in text files as string sequences of decimals separated by spaces. Taking the outputs from the floating point implementation without injected faults as the control, the element by element difference between the control and the fault injected program versions is added up, and divided by the amount of data points to get the average difference for all output values. Table~\ref{table:injection_results} shows the average difference per data point between the output files of the fault injected versions and the unmodified floating point version.   
+The first column shows the filename where the output from the executable is stored. The filename is built from the benchmark name, which in this case is seidel-2d. The next part of file name contains the location of the injected bit in the variable, with "bit\_no\_0" representing a bit flip in the least significant bit of the variable (at bit index 0). The final part of the filename specifies whether the file output stems from a floating point implementation or a fixed point implementation.
 The first fixed point implementation of the benchmark without any faults injected is an exception, this is the entry with filename seidel-2d.txt.
 
 The second column shows the result of the above mentioned comparison between the unmodified floating point implementation of the benchmark, seidel-2d, and the implementation specified in the leftmost column. 
@@ -16,7 +16,7 @@ The values in column three are redundant and are present only for consistency wi
 
 %\begin{longtable}{lll}
 \begin{table}
-\caption{The table shows the output of the simple python script that collects the absolute differences between the original floating point implementation and the fault injected versions of the benchmark.}
+\caption{Output of the simple python script that collects the absolute differences between the original floating point implementation and the fault injected versions of the benchmark.}
 \label{table:injection_results}
 \begin{tabular}{lll}
    
@@ -58,8 +58,10 @@ The control, seidel-2d.float.txt, is identical to itself, so the difference is 0
 
 After bit number 54, the floating point average difference grows substantially from the previous bit injection, from 140.41412113413136 to 25619.825047812476, which is a factor of over 182. At this point, assuming that the floating point implementation follows the IEEE 754 standard, the bits flipped are in the exponent part of the floating point representation, which makes sense with the increase in size. The result for injected bit at index 62 is undefined for the floating point implementation, due to many NaN (not a number) outputs. There is no observed change in the fixed point output data compared to the original fixed point computation from injected bit at index 32 until injected bit at index 63.
 
+\section{Refactoring}
 
-When building \taffo{}  succeeded, the next goal was to use the existing framework provided in the benchmarks modified for use with \taffo{} to perform fault injection. There is an existing validate.py python script used to compare the standard floating point implementations of the polybench benchmarks and \taffo{}-produced fixed point implementations, and this was used to gain a basic understanding of how the outputs of the benchmarks were used to evaluate the performance and error of the \taffo{} code transformations. Line by line the code was refactored to be more verbose, and to more clearly represent the actions happening in the script.
+
+When building \taffo{} succeeded, the next goal was to use the existing framework provided in the benchmarks modified for use with \taffo{} to perform fault injection. There is an existing validate.py python script used to compare the standard floating point implementations of the polybench benchmarks and \taffo{}-produced fixed point implementations, and this was used to gain a basic understanding of how the outputs of the benchmarks were used to evaluate the performance and error of the \taffo{} code transformations. Line by line the code was refactored to be more verbose, and to more clearly represent the actions happening in the script.
 Listing~\ref{lst:validate_original} shows one of the functions in the original script, and listing~\ref{lst:validate_new} shows the refactored version. The refactored version is functionally equivalent to the original and provides the same output, save for modified dictionary keys in the output. This is because the script uses the dictionary keys as headings. 
 
 
@@ -149,16 +151,19 @@ def ComputeDifference(fix_data, flt_data):
 
 
 
-The comparison python script that was used to create the results in listing~\ref{lst:injection_results} was written in a separate github repository, and transplanted over to the \taffo{} repository whenever it was updated. This was done out of percieved convenience, but the directory with the script and the tests might just as well have been located in the taffo repository. In hindsight, this is probably also easier.
+The comparison python script that was used to create the results in listing~\ref{lst:injection_results} was written in a separate github repository, and transplanted over to the \taffo{} repository whenever it was updated.
+% This was done out of percieved convenience, but the directory with the script and the tests might just as well have been located in the taffo repository. In hindsight, this is probably also easier.
 
-The comparison script was written with tests documenting the behavior, and comments pointing out missing tests and undocumented behavior. Especially the tests are vital for external programmers to understand the intent behind the code, and more tests would have made it easier to understand the existing behavior in the \taffo{} repository. 
+The comparison script was written with tests documenting the behavior, and comments pointing out missing tests and undocumented behavior. Especially the tests are vital for external programmers to understand the intent behind the code.
+% and more tests would have made it easier to understand the existing behavior in the \taffo{} repository. 
 
-The edited scripts for compilatoins and running the benchmarks were heavily influenced by the existing compile.sh and run.sh scripts located in the tests/polybench-cpu directory, but edited for the purposes of this thesis. The new script for running the benchmarks provided functionality to run multiple files of the same benchmark with bitwise faults injected at different locations, and the new compile script likewise allows the user to easily compile multiple versions of the same script with bitwise faults at different locations. Instructions on the use of these scripts to repeat/extend the experiment is contained within the scripts themselves.
+The edited scripts for compiling and running the benchmarks were heavily influenced by the existing compile.sh and run.sh scripts located in the tests/polybench-cpu directory, but edited for the purposes of this thesis. The new script for running the benchmarks provided functionality to run multiple files of the same benchmark with bitwise faults injected at different locations, and the new compile script likewise allows the user to easily compile multiple versions of the same script with bitwise faults at different locations. Instructions on the use of these scripts to repeat/extend the experiment is contained within the scripts themselves.
 
 
 \section{Floatsmith}
 
-Floatsmith was selected as an option for fault injection campaigns along with \taffo{} because of source code being available, and the program being installable through a docker image. Initial studies of floatsmith were promising, as transforming the code included in the demos was easy. 
+Floatsmith was selected as an option for fault injection campaigns along with \taffo{} because of source code being available, and the program being installable through a docker image. Initial studies of floatsmith were promisin.
+% , as transforming the code included in the demos was easy. 
 However, when attempting to apply floatsmith to the benchmark code located in \taffo{} the result was an error, and no hints as to what may have been the problem. In the paper detailing floatsmith, the authors state that the tool has not been tested on larger codebases, and this may be a part of the problem. The demo scripts that comes with the floatsmith installation are single file programs, while the polybench benchmarks that come with \taffo{} are all multi-file programs. This, together with outdated/lacking documentation (for instance, at the moment there are dead links in the repository README), lead to no numerical results, but this in itself is a result.
 
 
